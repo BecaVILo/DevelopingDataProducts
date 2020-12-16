@@ -1,0 +1,145 @@
+---
+title: "The largest beer producing countries in the world in 2018"
+author: "Rebeca Viveros"
+date: "15/12/2020"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Ranking
+In this presentation we show the top 10 largest beer producing countries in 2018. 
+
+In that year, China was the 1st place in the production of this alcoholic beverage, Germany was the first Europe country in the list. 
+
+The numbers are given in millions of hectoliters.
+
+For more details see <https://es.statista.com/estadisticas/1147467/lideres-produccion-cerveza-mundial/>.
+
+*hectoliter: Measure of volume, which is equal to 100 liters.*
+
+
+## Map with the 10 countries 
+If you click the flag, you can see the country and number of hectoliters.
+
+```{r echo=FALSE}
+library(leaflet)
+
+China <- makeIcon(
+  iconUrl = "https://www.flaticon.es/svg/static/icons/svg/323/323363.svg",
+  iconWidth = 31*215/230, iconHeight = 31,
+  iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+UnitedStates <- makeIcon(
+  iconUrl = "https://www.flaticon.es/svg/static/icons/svg/323/323310.svg",
+  iconWidth = 31*215/230, iconHeight = 31,
+  iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+Brazil <- makeIcon(
+  iconUrl = "https://www.flaticon.es/svg/static/icons/svg/3909/3909370.svg",
+  iconWidth = 31*215/230, iconHeight = 31,
+  iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+Mexico <- makeIcon(
+  iconUrl = "https://www.flaticon.es/svg/static/icons/svg/206/206600.svg",
+  iconWidth = 31*215/230, iconHeight = 31,
+  iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+Germany <- makeIcon(
+  iconUrl = "https://www.flaticon.es/svg/static/icons/svg/323/323332.svg",
+  iconWidth = 31*215/230, iconHeight = 31,
+  iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+Russia <- makeIcon(
+  iconUrl = "https://www.flaticon.es/svg/static/icons/svg/323/323300.svg",
+  iconWidth = 31*215/230, iconHeight = 31,
+  iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+Japan <- makeIcon(
+  iconUrl = "https://www.flaticon.es/svg/static/icons/svg/197/197604.svg",
+  iconWidth = 31*215/230, iconHeight = 31,
+  iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+Vietnam <- makeIcon(
+  iconUrl = "https://www.flaticon.es/svg/static/icons/svg/197/197473.svg",
+  iconWidth = 31*215/230, iconHeight = 31,
+  iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+UnitedKigdom <- makeIcon(
+  iconUrl = "https://www.flaticon.es/svg/static/icons/svg/323/323329.svg",
+  iconWidth = 31*215/230, iconHeight = 31,
+  iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+Poland <- makeIcon(
+  iconUrl = "https://www.flaticon.es/svg/static/icons/svg/197/197529.svg",
+  iconWidth = 31*215/230, iconHeight = 31,
+  iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+iconSet <- iconList(China= China,
+                    UnitedStates = UnitedStates,
+                    Brazil = Brazil,
+                    Mexico = Mexico,
+                    Germany = Germany,
+                    Russia = Russia,
+                    Japan = Japan,
+                    Vietnam = Vietnam,
+                    UnitedKigdom = UnitedKigdom,
+                    Poland = Poland)
+
+TopCountries <- data.frame(country = c("China", "UnitedStates", "Brazil", "Mexico", 
+                                       "Germany","Russia","Japan","Vietnam","UnitedKigdom",
+                                       "Poland"),
+                           lat = c(39.9075,38.89511,-23.5475,19.42847,52.52437,62.965840,35.35,14.058324,55.378051,	51.919438),
+                           lng = c(116.39723,-77.03637,-46.63611,-99.12766,13.41053,95.522021,137.18333,108.277199,-3.435973,19.145136),
+                           prod = c(381.2, 214.61, 141.38, 119.8, 93.65, 77.47, 52.64, 43, 41.53,40.93))
+
+TopCountries %>%
+  leaflet() %>%
+  addTiles() %>%
+  addProviderTiles(providers$Esri.NatGeoWorldMap) %>%
+  addMarkers(~lat, lng = ~lng, icon = ~iconSet[country],
+             popup = paste(sep = "<br/>", TopCountries$country, TopCountries$prod))
+```
+
+## To be clear
+This graph shows the ranking most clearly.
+
+```{r echo=FALSE}
+library(ggplot2)
+
+g <- ggplot(TopCountries, aes(x = reorder(country, +prod), y = prod)) +
+  geom_bar(stat = "identity", fill=rgb(0.1,0.4,0.5,0.7)) +
+  ggtitle("The largest beer producing countries in the world in 2018") +
+  coord_flip() +
+  xlab(" ") + ylab(" ")
+g
+```
+
+
+## Just viewing the data
+We can see the numbers in this table.
+```{r echo=FALSE}
+library(knitr)
+r <- cbind(TopCountries$country, TopCountries$prod)
+kable(r, col.names = c("Country", "hectoliters (in millions)"),align = 'c')
+
+```
+
+## Last but not least
+- You can see the code of this work in the next link <https://github.com/BecaVILo/DevelopingDataProducts/blob/main/UsingLeaflet.R>.
+
+- The code for the Rmarkdown document is in <>.
+
+
